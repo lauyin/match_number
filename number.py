@@ -54,15 +54,40 @@ class matchNumber:
         return line
 
     def numbertoCode(self, num):
-        return self.printNumber(self.matchNumberCode[num])
+        try:
+            if num > 9:
+                numString = str(num)
+                numberlist = []
+                for d in numString:
+                    numberlist.append(
+                        self.printNumber(self.matchNumberCode[int(d)]))
+                return self.printNumberGroup(
+                    numberlist, space=" ", breakline=0)
+            else:
+                return self.printNumber(self.matchNumberCode[num])
 
-    def printNumberGroup(self, numbers, space="\t"):
-        newline = [""] * 5
+        except Exception as e:
+            print(f"##err input #{num} not in list.\n{e}")
+
+    def printNumberGroup(self, numbers, space="\t", breakline=1, noOfDigit=5, diplaylines=5):
+        newlines = [""] * diplaylines
+        counter = 0
+        newlineNum = 0
         for i in numbers:
             for l in range(len(i)):
-                newline[l] += space
-                newline[l] += i[l]
-        return newline
+                row = noOfDigit * newlineNum + l
+                print(row, counter)
+                newlines[row] += i[l]
+                newlines[row] += space
+            counter += 1
+
+            if counter % noOfDigit == 0 and counter > 0 and breakline == 1:
+                newlineNum += 1
+                # print(newlineNum)
+                for i in range(diplaylines):
+                    newlines.append("")
+
+        return newlines
 
     def display(self, lines):
         for l in lines:
@@ -70,9 +95,10 @@ class matchNumber:
 
 
 if __name__ == "__main__":
-
+    print("Testing...")
     matchSet = matchNumber()
     numbers = []
-    for i in range(10):
+
+    for i in range(0, 20):
         numbers.append(matchSet.numbertoCode(i))
     matchSet.display(matchSet.printNumberGroup(numbers))
